@@ -7,7 +7,14 @@
 <li>web messenger to apac <a href="apacinno.html">innovations</a></li>    
 <li>VA related pages
     <ul>
-        <li>MYB & tripPlanner <a href="VA/mybhandoff.html">handoff</a></li>
+        <li>MYB & tripPlanner <a href="VA/mybhandoff.html">handoff</a>
+            <form action="VA/mybhandoff.html" method="get">
+                <label for="errorContext">Error Context:</label><input type="text" id="errorContext" name="errorContext"><button type="submit">Go</button>
+            </form>
+            <form action="VA/mybhandoff.html" method="get">
+                <label for="tripPlannerIntent">TripPlannerIntent:</label><input type="text" id="tripPlannerIntent" name="tripPlannerIntent"><button type="submit">Go</button>
+            </form>
+        </li>
         <li><form action="VA/ivrhandoff.html" method="get">IVR Handoff test <br>
             <label for="convID">Voice Call conversation ID:</label><input type="text" id="convID" name="IVRconvID"><button type="submit">Go</button>
         </form></li>
