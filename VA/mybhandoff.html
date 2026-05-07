@@ -1,0 +1,119 @@
+<html>
+<head><title>MYB Handoff DEV org</title></head>
+<body>
+<h1>MYB Handoff DEV org</h1>
+<script type="text/javascript" charset="utf-8">
+  (function (g, e, n, es, ys) {
+    g['_genesysJs'] = e;
+    g[e] = g[e] || function () {
+      (g[e].q = g[e].q || []).push(arguments)
+    };
+    g[e].t = 1 * new Date();
+    g[e].c = es;
+    ys = document.createElement('script'); ys.async = 1; ys.src = n; ys.charset = 'utf-8'; document.head.appendChild(ys);
+  })(window, 'Genesys', 'https://apps.mypurecloud.com.au/genesys-bootstrap/genesys.min.js', {
+    environment: 'prod-apse2',
+    deploymentId: '65c7724d-bc12-4baf-9a1a-aac9f04792a8',
+		debug: true
+  });
+
+Genesys("subscribe", "Messenger.ready", function () {
+  const params = new URLSearchParams(window.location.search);
+  if (params.has("errorContext")){
+    Genesys("command", "Database.set", { messaging: {customAttributes: { errorContext: params.get("errorContext") }}});
+  }
+  else if (params.has("tripPlannerIntent")) {
+    Genesys("command", "Database.set", { messaging: {customAttributes: { tripPlannerIntent: params.get("tripPlannerIntent") }}});
+  }
+  Genesys("command", "Messenger.open", {},
+    () => {
+      /*fulfilled callback*/
+    },
+    (error) => {
+      /*rejected callback*/
+    }
+  );
+});
+
+Genesys('registerPlugin', 'AuthProvider', (AuthProvider) => {
+
+  // COMMAND
+  // *********
+  // getAuthCode
+  // reAuthenticate
+  // signIn
+
+  // EVENTS
+  // *********
+  // signedIn
+  // signInFailed
+
+  /* Register Command - mandatory */
+
+  AuthProvider.registerCommand('getAuthCode', (e) => {
+
+	// Add the necessary logic and resolve with the authCode and redirectUri provided by your Authentication provider. Messenger will call this command to get the the tokens.
+
+	e.resolve({
+		authCode: "my code",       // pass your authorization code here
+		redirectUri: "http://",  // pass the redirection URI configured in your Authentication provider here
+		nonce: "123412342134",               // pass the random string preferably in uuid format. Applicable for OKTA provider.
+		maxAge: 3600000,             // pass elapsed time in seconds. Applicable for OKTA provider and it is an optional parameter.
+		codeVerifier: "", // pass your code verifier here when PKCE flow is enabled
+		iss: "12345",                   // pass your iss here. It is an optional parameter provided in the authorization response by your Authentication provider.
+	});
+  });
+
+  AuthProvider.registerCommand('reAuthenticate', (e) => {
+    
+	// Messenger will call this command when current refreshToken and/or authCode are no more valid. 
+    // Brand can add logic here to simply re-login and resolve this command after successful login so that Messenger can get the new authCode. 
+    // In case when browser needs to reload for a login, there is no need to resolve this command with the data. 
+    // Note: After a successful re-login, calling the getAuthCode command is taken care internally and there is no need to call it explicitly again.
+
+
+  });
+
+    /* Register Command - optional */
+
+  AuthProvider.registerCommand('signIn', (e) => { 
+
+    // This command will let Messenger know that the user is not signed-in yet (although Messenger is initialized) and it can now try to sign-in later. 
+    // Write your logic here to trigger the login process by gathering the user credentials from your preferred location.
+    // Messenger calls this command when Step-up conversation is enabled. 
+
+    if (signedInSuccessfully) {
+
+      AuthProvider.publish('signedIn', data); // REQUIRED event {authCode: xxx, ...} to let Auth plugin know so it can re-initialize Messenger with authenticated details.
+
+      e.resolve(data);   // where 'data' is as discussed in the return data section here - https://developer.genesys.cloud/commdigital/digital/webmessaging/messengersdk/SDKCommandsEvents/authProviderPlugin#authprovider-signin
+
+    } else {
+
+      AuthProvider.publish('signInFailed', error); // REQUIRED event to let Messenger know that sign-in failed so it can reset its UI state.
+    
+    }
+  });
+
+  /* Subscribe to Auth plugin events */
+
+   AuthProvider.subscribe('Auth.loggedOut', () => {
+     // This event is published across the browser tabs/devices where the user is logged in, so you can do something on logout.
+ 	   // For example, clear any authenticated flags that you might have set during login.
+   });
+
+  /* Subscribe to Auth plugin events - optional */
+
+  AuthProvider.subscribe('Auth.authError', (error) => {
+
+    // This event is published across the browser tabs/devices where the user is logged in, so you can do something on logout.
+    // For example, clear any authenticated flags that you might have set during login.
+  });
+
+  // Tell Messenger that your plugin is ready (mandatory)
+  AuthProvider.ready();
+});
+
+</script>
+</body>
+</html>
