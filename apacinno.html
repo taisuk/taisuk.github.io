@@ -1,0 +1,68 @@
+<html>
+<head><title>web message testing</title></head>
+<body>
+<h1>Web Message testing to apac Innovations</h1>
+<script type="text/javascript" charset="utf-8">
+  (function (g, e, n, es, ys) {
+    g['_genesysJs'] = e;
+    g[e] = g[e] || function () {
+      (g[e].q = g[e].q || []).push(arguments)
+    };
+    g[e].t = 1 * new Date();
+    g[e].c = es;
+    ys = document.createElement('script'); ys.async = 1; ys.src = n; ys.charset = 'utf-8'; document.head.appendChild(ys);
+  })(window, 'Genesys', 'https://apps.mypurecloud.com.au/genesys-bootstrap/genesys.min.js', {
+    environment: 'prod-apse2',
+    deploymentId: 'e2d8291d-bfa3-4285-8a14-65c96fb3ee5e'
+  });
+
+let messagecounter;
+	Genesys("subscribe", "Messenger.ready", function () {
+		console.log("Messenger.ready fired");
+messagecounter = 0;
+  const params = new URLSearchParams(window.location.search);
+  if (params.has("errorContext")){
+    Genesys("command", "Database.set", { messaging: {customAttributes: { errorContext: params.get("errorContext") }}});
+  }
+  else if (params.has("tripPlannerIntent")) {
+    Genesys("command", "Database.set", { messaging: {customAttributes: { tripPlannerIntent: params.get("tripPlannerIntent") }}});
+  }
+	Genesys("command", "Database.get", {}, 
+		  function(data){
+				console.log("Received data after messenger ready" + JSON.stringify(data))},
+		  function(){ /* rejected */ });
+  Genesys("command", "Messenger.open", {},
+    () => {
+      /*fulfilled callback*/
+    },
+    (error) => {
+      /*rejected callback*/
+    }
+  );
+});
+
+	Genesys("subscribe", "Database.ready", function () {
+		console.log("Database.ready fired");
+		Genesys("command", "Database.get", {}, 
+		  function(data){
+				console.log("Received data " + JSON.stringify(data))},
+		  function(){ /* rejected */ });
+});
+Genesys("subscribe", "MessagingService.conversationCleared", function({data}){
+    console.log("Conversation Cleared: " + data);
+});
+
+Genesys("subscribe", "MessagingService.sendingMessage", function({ data }) {
+    console.log(data);
+		messagecounter = messagecounter + 1;
+		if (messagecounter > 2){
+			// Set data here
+			Genesys("command", "Database.set", { messaging: {customAttributes: { testdata: "This is test" }}});
+		}
+});
+Genesys("subscribe", "MessagingService.started", function({data}){
+  console.log(data)
+});
+</script>
+</body>
+</html>
