@@ -18,7 +18,6 @@
   });
 
 Genesys("subscribe", "Messenger.ready", function () {
-    // setTimeout(() => {
         const params = new URLSearchParams(window.location.search);
         if (params.has("IVRconvID")) {
             Genesys("command", "Database.set", {
@@ -29,6 +28,7 @@ Genesys("subscribe", "Messenger.ready", function () {
                 }
             });
         }
+    setTimeout(() => {
         Genesys("command", "Messenger.open", {},
             () => {
                 /* fulfilled callback */
@@ -38,13 +38,13 @@ Genesys("subscribe", "Messenger.ready", function () {
                 console.error("Messenger open failed:", error);
             }
         );
-    // }, 200);
+    }, 200);
 })
 
 
-// Genesys("subscribe", "Messenger.ready", function () {
-// 	console.log("Closing messenger!")
-//     Genesys("command", "Messenger.close"), {},function(){},function(){}});
+Genesys("subscribe", "Messenger.ready", function () {
+	console.log("Closing messenger!")
+    Genesys("command", "Messenger.close"), {},function(){},function(){}});
 		
 Genesys('registerPlugin', 'AuthProvider', (AuthProvider) => {
 
