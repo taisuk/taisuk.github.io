@@ -1,7 +1,7 @@
 <html>
-<head><title>MYB Handoff DEV org</title></head>
+<head><title>IVR offer test DEV org</title></head>
 <body>
-<h1>MYB Handoff DEV org</h1>
+<h1>IVR offer test DEV org</h1>
 <script type="text/javascript" charset="utf-8">
   (function (g, e, n, es, ys) {
     g['_genesysJs'] = e;
@@ -18,7 +18,7 @@
   });
 
 Genesys("subscribe", "Messenger.ready", function () {
-    setTimeout(() => {
+    // setTimeout(() => {
         const params = new URLSearchParams(window.location.search);
         if (params.has("IVRconvID")) {
             Genesys("command", "Database.set", {
@@ -38,13 +38,13 @@ Genesys("subscribe", "Messenger.ready", function () {
                 console.error("Messenger open failed:", error);
             }
         );
-    }, 200);
+    // }, 200);
 })
 
 
-Genesys("subscribe", "Messenger.ready", function () {
-	console.log("Closing messenger!")
-    Genesys("command", "Messenger.close"), {},function(){},function(){}});
+// Genesys("subscribe", "Messenger.ready", function () {
+// 	console.log("Closing messenger!")
+//     Genesys("command", "Messenger.close"), {},function(){},function(){}});
 		
 Genesys('registerPlugin', 'AuthProvider', (AuthProvider) => {
 
