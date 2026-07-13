@@ -20,12 +20,15 @@
   });
 
 Genesys("subscribe", "Launcher.ready", function () {  
+  console.log("Firing Launcher.show");
   Genesys("command", "Launcher.show", {},
     () => {
       /*fulfilled callback*/
+      console.log("Launcher.show fulfilled callback");
     },
     (error) => {
       /*rejected callback*/
+      console.log("Launcher.show rejected callback");
     }
   );
 });
