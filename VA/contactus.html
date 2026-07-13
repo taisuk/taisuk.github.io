@@ -32,21 +32,6 @@ Genesys("subscribe", "Launcher.ready", function () {
   );
 });
 
-Genesys('subscribe', 'Messenger.ready', function () {
-  Genesys(
-    'command',
-    'Messenger.open',
-    {},
-    () => {
-     /*fulfilled callback*/
-     console.log('Messenger opened');
-    },
-    (error) => {
-     /*rejected callback*/
-     console.log("Couldn't open messenger.", error);
-    }
-  );
-});
 </script>
 </body>
 </html>
