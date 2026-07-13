@@ -15,8 +15,7 @@
     ys = document.createElement('script'); ys.async = 1; ys.src = n; ys.charset = 'utf-8'; document.head.appendChild(ys);
   })(window, 'Genesys', 'https://apps.mypurecloud.com.au/genesys-bootstrap/genesys.min.js', {
     environment: 'prod-apse2',
-    deploymentId: '67a69f57-73ee-4f62-b236-49694dcfabf9',
-		debug: false
+    deploymentId: '8ca7f301-e593-41cc-9259-93b603f46feb'
   });
 
 Genesys("subscribe", "Launcher.ready", function () {  
@@ -33,6 +32,21 @@ Genesys("subscribe", "Launcher.ready", function () {
   );
 });
 
+Genesys('subscribe', 'Messenger.ready', function () {
+  Genesys(
+    'command',
+    'Messenger.open',
+    {},
+    () => {
+     /*fulfilled callback*/
+     console.log('Messenger opened');
+    },
+    (error) => {
+     /*rejected callback*/
+     console.log("Couldn't open messenger.", error);
+    }
+  );
+});
 </script>
 </body>
 </html>
