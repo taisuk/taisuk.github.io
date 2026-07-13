@@ -28,37 +28,6 @@ Genesys("subscribe", "Launcher.ready", function () {
   );
 });
 
-Genesys("subscribe", "Auth.ready", function() {
-  console.log("Auth plugin is ready.");
-	  Genesys("command", "Auth.getSettings", {},
-    (data) => {
-console.log(data);    },
-    (error) => {
-      /*rejected callback*/
-    }
-  );
-
-});
-
-/*
-Genesys("subscribe", "Messenger.ready", function () {
-  const params = new URLSearchParams(window.location.search);
-  if (params.has("errorContext")){
-    Genesys("command", "Database.set", { messaging: {customAttributes: { errorContext: params.get("errorContext") }}});
-  }
-  else if (params.has("tripPlannerIntent")) {
-    Genesys("command", "Database.set", { messaging: {customAttributes: { tripPlannerIntent: params.get("tripPlannerIntent") }}});
-  }
-  Genesys("command", "Messenger.open", {},
-    () => {
-      //fulfilled callback
-    },
-    (error) => {
-      //rejected callback
-    }
-  );
-});
-*/
 </script>
 </body>
 </html>
